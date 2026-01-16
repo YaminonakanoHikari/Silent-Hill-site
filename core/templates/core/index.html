@@ -1,40 +1,63 @@
-{% load static %} <! -- Подгружаем магию статики -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Silent Hill Archive</title>
     <link rel="stylesheet" href="{% static 'core/style.css' %}">
 </head>
 <body>
 
-    <div class="world-container">
+    <div class="noise-overlay"></div>
+
+    <div class="container">
         
         <header>
             <h1>SH: ARCHIVE</h1>
             <button id="switch-btn" onclick="toggleWorld()">Switch World</button>
         </header>
 
-        <main>
-            <p>Welcome to Silent Hill...</p>
+        <main class="grid-container">
+            {% for item in artifacts %}
+            <div class="card">
+                
+                <div class="content-normal">
+                    {% if item.image_normal %}
+                        <img src="{{ item.image_normal.url }}" alt="{{ item.title }}">
+                    {% endif %}
+                    <h2>{{ item.title }}</h2>
+                    <p>{{ item.description_normal }}</p>
+                </div>
+
+                <div class="content-dark">
+                    {% if item.image_dark %}
+                        <img src="{{ item.image_dark.url }}" alt="{{ item.title }}">
+                    {% endif %}
+                    <h2>{{ item.title }}</h2>
+                    <p>{{ item.description_dark }}</p>
+                </div>
+
+            </div>
+            {% endfor %}
         </main>
 
-        <div class="noise-overlay"></div>
     </div>
 
     <script>
         function toggleWorld() {
-            // Ищем наш главный контейнер
+            // Находим body и кнопку
             const body = document.body;
-            // Переключаем класс 'otherworld'
-            body.classList.toggle('otherworld');
-            
-            // Меняем текст кнопки для понта
             const btn = document.getElementById('switch-btn');
+
+            // Переключаем класс (добавляем или убираем 'otherworld')
+            body.classList.toggle('otherworld');
+
+            // Меняем текст на кнопке
             if (body.classList.contains('otherworld')) {
-                btn.innerText = "Normal World";
+                btn.innerText = "Leave Otherworld";
             } else {
-                btn.innerText = "Otherworld";
+                btn.innerText = "Enter Otherworld";
             }
         }
     </script>

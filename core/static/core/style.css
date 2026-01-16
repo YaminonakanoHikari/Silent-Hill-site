@@ -1,48 +1,69 @@
-/* Переменные: тут мы задаем цвета для двух миров */
+/* --- НАСТРОЙКИ ПЕРЕМЕННЫХ (ЦВЕТА) --- */
 :root {
-    /* Обычный мир (Туманный) */
-    --bg-color: #cfd8dc; /* Серый туманный */
-    --text-color: #263238; /* Темно-серый */
-    --font-family: 'Courier New', Courier, monospace; /* Шрифт как на печатной машинке */
-    --overlay-opacity: 0.1; /* Слабый шум */
+    /* Обычный мир (Туман) */
+    --bg-color: #cfd8dc;
+    --text-color: #263238;
+    --card-bg: rgba(255, 255, 255, 0.4);
+    --border-color: #546e7a;
+    --font-main: 'Courier New', Courier, monospace;
+    --overlay-opacity: 0.05; /* Еле заметный шум */
+    --filter-img: sepia(0.2); /* Чуть старое фото */
 }
 
-/* "Иной мир" (Ржавый) - этот класс добавляется через JS */
+/* Настройки для "Иного мира" (Ржавчина) */
 body.otherworld {
-    --bg-color: #3e2723; /* Темно-коричневый, ржавый */
-    --text-color: #ffccbc; /* Бледно-оранжевый */
-    --overlay-opacity: 0.4; /* Сильный шум */
+    --bg-color: #2b0e06; /* Темно-кровавый фон */
+    --text-color: #ffab91; /* Бледно-красный текст */
+    --card-bg: rgba(0, 0, 0, 0.6); /* Темные карточки */
+    --border-color: #8d3a28; /* Ржавые границы */
+    --overlay-opacity: 0.3; /* Сильный шум */
+    --filter-img: contrast(1.2) sepia(0.6) hue-rotate(-20deg); /* Жуткий фильтр */
 }
 
-/* Применяем настройки */
+/* --- ОБЩИЕ СТИЛИ --- */
 body {
     margin: 0;
+    padding: 0;
     background-color: var(--bg-color);
     color: var(--text-color);
-    font-family: var(--font-family);
-    transition: background-color 1.5s ease, color 1.5s ease; /* Плавный переход 1.5 сек */
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    font-family: var(--font-main);
+    /* Плавный переход цветов за 1.5 секунды */
+    transition: background-color 1.5s ease, color 1.5s ease;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 2; /* Чтобы контент был НАД шумом */
+}
+
+/* --- ШАПКА --- */
+header {
+    text-align: center;
+    margin-bottom: 50px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 20px;
 }
 
 h1 {
     font-size: 3rem;
     letter-spacing: 5px;
-    text-transform: uppercase;
+    margin-bottom: 10px;
 }
 
 button {
-    margin-top: 20px;
-    padding: 10px 20px;
+    padding: 10px 25px;
+    font-family: inherit;
+    font-size: 1.2rem;
     background: transparent;
     border: 2px solid var(--text-color);
     color: var(--text-color);
-    font-family: inherit;
     cursor: pointer;
     font-weight: bold;
+    transition: 0.3s;
 }
 
 button:hover {
@@ -50,15 +71,74 @@ button:hover {
     color: var(--bg-color);
 }
 
-/* Эффект шума (зернистость) */
+/* --- СЕТКА КАРТОЧЕК --- */
+.grid-container {
+    display: grid;
+    /* Адаптивная сетка: карточки сами встанут по ширине */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+/* --- КАРТОЧКА --- */
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    border-radius: 4px;
+    /* Размытие фона за карточкой (матовое стекло) */
+    backdrop-filter: blur(5px); 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover; /* Чтобы картинка не растягивалась уродливо */
+    border: 1px solid var(--border-color);
+    filter: var(--filter-img);
+    margin-bottom: 15px;
+}
+
+.card h2 {
+    margin-top: 0;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    border-bottom: 1px dashed var(--border-color);
+    padding-bottom: 10px;
+}
+
+/* --- ЛОГИКА ПЕРЕКЛЮЧЕНИЯ (САМОЕ ВАЖНОЕ) --- */
+
+/* 1. Скрываем "Темный контент" по умолчанию */
+.content-dark {
+    display: none;
+}
+
+/* 2. Если у body есть класс .otherworld, то: */
+
+/* Скрываем обычный контент */
+body.otherworld .content-normal {
+    display: none;
+}
+
+/* Показываем темный контент и добавляем анимацию */
+body.otherworld .content-dark {
+    display: block;
+    animation: flicker-text 0.1s infinite alternate; /* Легкое дрожание */
+}
+
+@keyframes flicker-text {
+    0% { opacity: 0.9; transform: skewX(0deg); }
+    100% { opacity: 1; transform: skewX(1deg); }
+}
+
+/* --- ЭФФЕКТ ШУМА (OVERLAY) --- */
 .noise-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; /* Чтобы можно было кликать сквозь шум */
-    background: url('https://grainy-gradients.vercel.app/noise.svg'); /* Берем шум из интернета */
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; /* Пропускает клики сквозь себя */
+    background: url('https://grainy-gradients.vercel.app/noise.svg');
     opacity: var(--overlay-opacity);
-    z-index: 999;
+    z-index: 1;
 }
