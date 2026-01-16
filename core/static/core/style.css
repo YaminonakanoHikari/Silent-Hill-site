@@ -1,0 +1,64 @@
+/* Переменные: тут мы задаем цвета для двух миров */
+:root {
+    /* Обычный мир (Туманный) */
+    --bg-color: #cfd8dc; /* Серый туманный */
+    --text-color: #263238; /* Темно-серый */
+    --font-family: 'Courier New', Courier, monospace; /* Шрифт как на печатной машинке */
+    --overlay-opacity: 0.1; /* Слабый шум */
+}
+
+/* "Иной мир" (Ржавый) - этот класс добавляется через JS */
+body.otherworld {
+    --bg-color: #3e2723; /* Темно-коричневый, ржавый */
+    --text-color: #ffccbc; /* Бледно-оранжевый */
+    --overlay-opacity: 0.4; /* Сильный шум */
+}
+
+/* Применяем настройки */
+body {
+    margin: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-family);
+    transition: background-color 1.5s ease, color 1.5s ease; /* Плавный переход 1.5 сек */
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    font-size: 3rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: transparent;
+    border: 2px solid var(--text-color);
+    color: var(--text-color);
+    font-family: inherit;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: var(--text-color);
+    color: var(--bg-color);
+}
+
+/* Эффект шума (зернистость) */
+.noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Чтобы можно было кликать сквозь шум */
+    background: url('https://grainy-gradients.vercel.app/noise.svg'); /* Берем шум из интернета */
+    opacity: var(--overlay-opacity);
+    z-index: 999;
+}

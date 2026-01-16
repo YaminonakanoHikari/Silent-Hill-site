@@ -1,0 +1,42 @@
+{% load static %} <! -- Подгружаем магию статики -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Silent Hill Archive</title>
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body>
+
+    <div class="world-container">
+        
+        <header>
+            <h1>SH: ARCHIVE</h1>
+            <button id="switch-btn" onclick="toggleWorld()">Switch World</button>
+        </header>
+
+        <main>
+            <p>Welcome to Silent Hill...</p>
+        </main>
+
+        <div class="noise-overlay"></div>
+    </div>
+
+    <script>
+        function toggleWorld() {
+            // Ищем наш главный контейнер
+            const body = document.body;
+            // Переключаем класс 'otherworld'
+            body.classList.toggle('otherworld');
+            
+            // Меняем текст кнопки для понта
+            const btn = document.getElementById('switch-btn');
+            if (body.classList.contains('otherworld')) {
+                btn.innerText = "Normal World";
+            } else {
+                btn.innerText = "Otherworld";
+            }
+        }
+    </script>
+</body>
+</html>
